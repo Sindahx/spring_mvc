@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dffx.businessmapper.UserMapper">
+
+	<!--  java 对象与数据库字段对应，如果数据库字段与java对象属性名称一样，可以不写 -->
+	<resultMap type="User" id="RM.User">
+		<result column="user_uid" property="userUid" javaType="int" />
+		<result column="user_name" property="userName" javaType="String" />
+		<result column="user_sex" property="userSex" javaType="int" />
+		<result column="user_birthday" property="userBirthday" javaType="Long" />
+		<result column="user_identity" property="userIdentity" javaType="String" />		
+		<result column="user_email" property="userEmail" javaType="String"/>
+		<result column="user_level" property="userLevel" javaType="int" />
+		<result column="user_ischeck" property="userIscheck" javaType="int" />
+		<result column="user_link" property="userLink" javaType="String" />
+		<result column="user_isvip" property="userIsvip" javaType="int" />
+		<result column="user_type" property="userType" javaType="int" />
+		<result column="user_regedittime" property="userRegedittime" javaType="java.sql.Timestamp" />
+		<result column="user_updatetime" property="userUpdatetime" javaType="java.sql.Timestamp" />
+		<result column="user_province" property="userProvince" javaType="int" /> 
+		<result column="user_city" property="userCity" javaType="int" />
+		<result column="user_area" property="userArea" javaType="int" />
+		<result column="user_description" property="userDescription" javaType="String" />
+		<result column="user_headlink" property="userHeadlink" javaType="String" />
+	</resultMap>
+
+	<select id="getUserByUid" parameterType="int" resultMap="RM.User">
+		select * from dffx_db_bs.dffx_user where user_uid = #{userUid}
+    </select>
+	
+	<update id="updateUser" parameterType="User">
+		update dffx_user 
+		<set>
+			<if test="userName!=null and userName!=''">user_name=#{userName},</if>
+			<if test="userSex!=null">user_sex=#{userSex},</if>
+			<if test="userBirthday!=null">user_birthday=#{userBirthday},</if>
+			<if test="userIdentity!=null and userIdentity!=''">user_identity=#{userIdentity},</if>
+			<if test="userEmail!=null and userEmail!=''">user_email=#{userEmail},</if>
+			<if test="userProvince!=null">user_province=#{userProvince},</if>
+			<if test="userCity!=null">user_city=#{userCity},</if>
+			<if test="userArea!=null">user_area=#{userArea},</if>
+			<if test="userDescription!=null">user_description=#{userDescription},</if>
+			user_updatetime=now()
+		</set>
+		where id=#{id}
+	</update>
+	
+	<update id="updateUserIsCheck">
+		update dffx_user set user_ischeck = #{status},user_updatetime=now() where user_uid = #{uid}
+	</update>
+	
+	
+	<insert id="saveUser" parameterType="User" useGeneratedKeys="true">
+		insert into
+		dffx_user(user_uid,user_name,user_sex,user_birthday,user_identity,user_level,user_isvip,user_ischeck,user_type,user_regedittime,user_updatetime,user_email,user_province,user_city,user_area)
+		values(#{userUid},#{userName},#{userSex},#{userBirthday},#{userIdentity},#{userLevel},#{userIsvip},#{userIscheck},#{userType},#{userRegedittime},#{userUpdatetime},#{userEmail},#{userProvince},#{userCity},#{userArea})
+	</insert>
+	
+	<update id="setHeadLink">
+		update dffx_user set user_headlink=#{headLink},user_updatetime=now() where user_uid=#{userUid}
+	</update>
+	
+</mapper>   

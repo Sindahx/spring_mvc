@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+        ">    
+      <bean id="dataSourceBusiness" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		 
+		<!--<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://192.168.1.123:3306/dffx_db_bs?useUnicode=true&amp;characterEncoding=utf8" />
+		<property name="username" value="root" />
+		<property name="password" value="12345" />
+		-->
+		<property name="url" value="jdbc:mysql://121.201.36.80:43307/dffx_db_bs?useUnicode=true&amp;characterEncoding=utf8"/>
+		<property name="username" value="dbapi1" /> 
+		<property name="password" value="e!*2016@dbapi" />
+		
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="10" />
+		<property name="minIdle" value="10" />
+		<property name="maxActive" value="100" />
+		<property name="maxWait" value="30000" />
+		<property name="timeBetweenEvictionRunsMillis" value="30000" />
+		<property name="minEvictableIdleTimeMillis" value="30000" />
+		<property name="validationQuery" value="SELECT 'x'" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="filters" value="wall,stat" />
+	</bean>
+ 
+	<bean id="businessMultipleDataSource" class="com.dffx.servlet.BusinessMultipleDataSource">
+        <property name="defaultTargetDataSource" ref="dataSourceBusiness"/>
+        <property name="targetDataSources">
+            <map>
+                <entry key="dataSourceBusiness" value-ref="dataSourceBusiness"/>
+            </map>
+        </property>
+    </bean>
+
+	<bean id ="businessSqlSessionFactory" class ="org.mybatis.spring.SqlSessionFactoryBean" >
+		<property name ="dataSource" ref ="businessMultipleDataSource" />
+		<property name ="configLocation" value ="classpath:businessmybatis.xml" />
+		<property name ="mapperLocations" >
+		<list >
+		<value> classpath:com/dffx/businessmapper/*.xml</value >
+		</list>
+		</property >
+	</bean>
+	
+    <bean id="businessTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">     
+		<property name ="dataSource" ref ="businessMultipleDataSource" />
+    </bean>
+    <tx:advice id="bstxAdvice" transaction-manager="businessTransactionManager">  
+		    <tx:attributes>  
+		      <tx:method name="load*" propagation="SUPPORTS" read-only="true"/>
+		      <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+		      <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+		      <tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
+		      <tx:method name="*"  propagation="REQUIRED" rollback-for="Exception"/>  
+		   </tx:attributes>  
+	</tx:advice>
+	<aop:config>  
+		<aop:pointcut id="businessTransactionPointcut"  expression="execution(* com.dffx.service..*.*(..))"/>
+		 <aop:advisor advice-ref="bstxAdvice" pointcut-ref="businessTransactionPointcut"/>   
+	</aop:config>
+	  
+	<bean name="businessScanner" class ="org.mybatis.spring.mapper.MapperScannerConfigurer" >
+		<property name ="basePackage" value ="com.dffx.businessmapper" />
+		<property name="sqlSessionFactoryBeanName" value="businessSqlSessionFactory" />
+		<property name ="markerInterface" value ="com.dffx.businessmapper.SqlMapper" />
+	</bean >
+</beans>

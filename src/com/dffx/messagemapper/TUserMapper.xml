@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dffx.messagemapper.TUserMapper">
+
+	<!--  java 对象与数据库字段对应，如果数据库字段与java对象属性名称一样，可以不写 -->
+	<resultMap type="TUser" id="RM.TUser">
+		<result column="id" property="id" javaType="int" />
+		<result column="user_uid" property="userUid" javaType="int" />
+		<result column="user_type" property="userType" javaType="int" />
+		<result column="user_phone" property="userPhone" javaType="String" />
+		<result column="user_nickname" property="userNickname" javaType="String" />
+		<result column="user_sex" property="userSex" javaType="int" />
+		<result column="user_birthday " property="userBirthday" javaType="long" />
+		<result column="user_headlink" property="userHeadlink" javaType="String" />
+		<result column="user_level" property="userLevel " javaType="int" />
+		<result column="user_status" property="userStatus" javaType="int" />
+		<result column="status" property="status" javaType="int" />
+		<result column="user_regedittime" property="userRegedittime" javaType="Date" />
+		<result column="user_updatetime " property="userUpdatetime" javaType="Date" />
+	</resultMap>
+
+	<insert id="saveTUser" parameterType="TUser" useGeneratedKeys="true">
+		insert into
+		IMFxUser(user_uid,user_type,user_phone,user_nickname,user_sex,user_birthday,user_headlink,user_level,user_status,status,user_regedittime,user_updatetime)
+		values(#{userUid},#{userType},#{userPhone},#{userNickname},#{userSex},#{userBirthday},#{userHeadlink},#{userLevel},#{userStatus},#{status},UNIX_TIMESTAMP(#{userRegedittime}),UNIX_TIMESTAMP(#{userUpdatetime}))
+	</insert>
+
+	<select id="getTUserByName" parameterType="String" resultMap="RM.TUser">
+		select * from IMFxUser where user_uid=#{userUid}
+    </select>
+
+	<select id="getTUserById" parameterType="String" resultMap="RM.TUser">
+		select * from IMFxUser where user_uid=#{id}
+    </select>
+
+	<update id="setTUserById" parameterType="TUser">
+		update IMFxUser set
+		user_phone=#{userPhone},user_nickname=#{userNickname},user_sex=#{userSex},user_birthday=#{userBirthday},user_headlink=#{userHeadlink},user_updatetime=UNIX_TIMESTAMP(#{userUpdatetime}),user_desc=#{userDesc}
+		where user_uid=#{userUid}
+    
+     </update>
+</mapper>   
