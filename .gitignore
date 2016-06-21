@@ -1,0 +1,4 @@
+/WebRoot/WEB-INF/classes/com/dffx/businessentry/*.class
+/WebRoot/WEB-INF/classes/com/dffx/dto/*.class
+*.class
+/WebRoot/WEB-INF/classes

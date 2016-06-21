@@ -18,7 +18,6 @@ public class BarCode {
 	public static void main(String[] args) {
 		try {
 
-			
 			String content = "2222222222222222222222222222222222";
 			String path = "D:/t";
 
@@ -26,12 +25,10 @@ public class BarCode {
 
 			Map hints = new HashMap();
 			hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-			BitMatrix bitMatrix = multiFormatWriter.encode(content,
-					BarcodeFormat.QR_CODE, 400, 400, hints);
+			BitMatrix bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, 400, 400, hints);
 			File file1 = new File(path, "test.jpg");
 			MatrixToImageWriter.writeToFile(bitMatrix, "jpg", file1);
-			BufferedImage image = MatrixToImageWriter
-					.toBufferedImage(bitMatrix);
+			BufferedImage image = MatrixToImageWriter.toBufferedImage(bitMatrix);
 
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			ImageIO.write(image, "jpg", out);

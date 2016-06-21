@@ -20,6 +20,21 @@ import com.sun.xml.internal.ws.util.ByteArrayBuffer;
  */
 public class ValidateCode {
 	
+
+	public static void main(String[] args) {
+		
+		String path = "d:/t/test.jpg";
+		
+		ValidateCode vCode = new ValidateCode(120, 40, 5, 100);
+		try {
+			System.out.println(vCode.getCode() + " >" + path);
+			vCode.write(path);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	// 图片的宽度。
 	private int width = 160;
 	// 图片的高度。
@@ -249,4 +264,6 @@ public class ValidateCode {
 		}
 		return (char) ret;
 	}
+	
+	
 }
