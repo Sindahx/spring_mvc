@@ -1,4 +1,4 @@
-package com.dffx.webservice.control;
+package com.dffx.webservice.action.file;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,6 +22,8 @@ import com.dffx.utils.Validator;
 import com.dffx.webservice.util.ConstansCN;
 import com.dffx.webservice.util.ConstansCnNumber;
 import com.dffx.webservice.util.WebConstansCode;
+
+
 
 @Controller
 public class FileDownLoadImp {
